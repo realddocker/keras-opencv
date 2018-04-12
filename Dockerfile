@@ -5,9 +5,15 @@ FROM nvidia/cuda:${cuda_version}-cudnn${cudnn_version}-devel
 # Install system packages
 RUN apt-get update && apt-get install -y --no-install-recommends \
       bzip2 \
+      cmake \
+      git \
+      unzip \
       g++ \
+      swig \
       git \
       graphviz \
+      libeigen3-dev \
+      libopenexr-dev \
       libgl1-mesa-glx \
       libhdf5-dev \
       openmpi-bin \
@@ -60,6 +66,12 @@ RUN conda install -y python=${python_version} && \
     git clone git://github.com/keras-team/keras.git /src && pip install -e /src[tests] && \
     pip install git+git://github.com/keras-team/keras.git && \
     conda clean -yt
+
+run wget -q https://github.com/opencv/opencv/archive/3.3.1.zip
+run unzip -q 3.3.1.zip
+run mkdir opencvbuild
+run cd opencvbuild && cmake ../opencv-3.3.1/
+run cd opencvbuild && make
 
 ADD theanorc /home/keras/.theanorc
 
